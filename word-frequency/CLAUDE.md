@@ -79,7 +79,15 @@ open index.html
 xdg-open index.html
 ```
 
-### Opção 2 — Servidor local (recomendado)
+### Opção 2 — Servidor local (recomendado para a função de URL)
+
+**A funcionalidade de análise por URL exige um servidor local.** Abrir o `index.html` diretamente via `file://` faz o browser tratar a origem como `null`, e o proxy CORS bloqueia requisições de origem nula.
+
+```powershell
+# PowerShell nativo (sem dependências)
+cd word-frequency
+powershell -ExecutionPolicy Bypass -File serve.ps1
+```
 
 ```bash
 # Com Node.js instalado
