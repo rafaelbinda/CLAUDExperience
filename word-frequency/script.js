@@ -51,6 +51,23 @@ clearBtn.addEventListener('click', () => {
 });
 
 // ── URL fetch ─────────────────────────────────────────────────
+const PROXIES = [
+  async (url) => {
+    const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error();
+    const { contents } = await r.json();
+    if (!contents) throw new Error('empty');
+    return contents;
+  },
+  async (url) => {
+    const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error();
+    const text = await r.text();
+    if (!text) throw new Error('empty');
+    return text;
+  },
+];
+
 fetchBtn.addEventListener('click', async () => {
   const url = urlInput.value.trim();
   if (!url) {
@@ -64,14 +81,13 @@ fetchBtn.addEventListener('click', async () => {
   fetchBtn.textContent = 'Fetching…';
 
   try {
-    const proxy    = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const response = await fetch(proxy);
-    if (!response.ok) throw new Error();
+    let html = null;
+    for (const proxy of PROXIES) {
+      try { html = await proxy(url); break; } catch { /* try next */ }
+    }
+    if (!html) throw new Error('all proxies failed');
 
-    const { contents } = await response.json();
-    if (!contents) throw new Error('empty');
-
-    const doc = new DOMParser().parseFromString(contents, 'text/html');
+    const doc = new DOMParser().parseFromString(html, 'text/html');
     doc.querySelectorAll('script, style, nav, header, footer').forEach(el => el.remove());
 
     const text = doc.body.textContent.replace(/\s+/g, ' ').trim();
