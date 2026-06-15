@@ -1,0 +1,6 @@
+# Claude Code internal data
+.claude/
+*/.claude/
+
+# MCP Playwright generated artifacts
+**/.playwright-mcp/
