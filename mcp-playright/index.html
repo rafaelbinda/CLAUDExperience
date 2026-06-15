@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Books to Scrape — 50 Livros</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 0.4rem;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 0.8rem;
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .table-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #1e293b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    thead tr {
+      background: #1e293b;
+    }
+
+    thead th {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-top: 1px solid #1e293b;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: #1a2235;
+    }
+
+    tbody td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+    }
+
+    .num {
+      color: #475569;
+      font-variant-numeric: tabular-nums;
+      width: 3rem;
+    }
+
+    .name {
+      max-width: 380px;
+      line-height: 1.4;
+    }
+
+    .name a {
+      color: #e2e8f0;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .name a:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .price {
+      font-family: 'Courier New', monospace;
+      color: #34d399;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .avail {
+      white-space: nowrap;
+    }
+
+    .avail-in  { color: #34d399; }
+    .avail-out { color: #f87171; }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+      white-space: nowrap;
+    }
+
+    .star-filled { color: #fbbf24; }
+    .star-empty  { color: #334155; }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Books to Scrape</h1>
+  <p>Dados coletados via MCP Playwright</p>
+  <span class="badge">50 livros · books.toscrape.com</span>
+</header>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th class="num">#</th>
+        <th>Título</th>
+        <th>Preço</th>
+        <th>Disponibilidade</th>
+        <th>Avaliação</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<footer>Coletado em 15/06/2026 · Fonte: books.toscrape.com</footer>
+
+<script>
+const ratingMap = { One: 1, Two: 2, Three: 3, Four: 4, Five: 5 };
+
+const books = [
+  { name: "A Light in the Attic", price: "£51.77", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html" },
+  { name: "Tipping the Velvet", price: "£53.74", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html" },
+  { name: "Soumission", price: "£50.10", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/soumission_998/index.html" },
+  { name: "Sharp Objects", price: "£47.82", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/sharp-objects_997/index.html" },
+  { name: "Sapiens: A Brief History of Humankind", price: "£54.23", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html" },
+  { name: "The Requiem Red", price: "£22.65", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/the-requiem-red_995/index.html" },
+  { name: "The Dirty Little Secrets of Getting Your Dream Job", price: "£33.34", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html" },
+  { name: "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull", price: "£17.93", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html" },
+  { name: "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics", price: "£22.60", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html" },
+  { name: "The Black Maria", price: "£52.15", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/the-black-maria_991/index.html" },
+  { name: "Starving Hearts (Triangular Trade Trilogy, #1)", price: "£13.99", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html" },
+  { name: "Shakespeare's Sonnets", price: "£20.66", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/shakespeares-sonnets_989/index.html" },
+  { name: "Set Me Free", price: "£17.46", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/set-me-free_988/index.html" },
+  { name: "Scott Pilgrim's Precious Little Life (Scott Pilgrim #1)", price: "£52.29", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html" },
+  { name: "Rip it Up and Start Again", price: "£35.02", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/rip-it-up-and-start-again_986/index.html" },
+  { name: "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991", price: "£57.25", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html" },
+  { name: "Olio", price: "£23.88", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/olio_984/index.html" },
+  { name: "Mesaerion: The Best Science Fiction Stories 1800-1849", price: "£37.59", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html" },
+  { name: "Libertarianism for Beginners", price: "£51.33", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/libertarianism-for-beginners_982/index.html" },
+  { name: "It's Only the Himalayas", price: "£45.17", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html" },
+  { name: "In Her Wake", price: "£12.84", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/in-her-wake_980/index.html" },
+  { name: "How Music Works", price: "£37.32", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/how-music-works_979/index.html" },
+  { name: "Foolproof Preserving: A Guide to Small Batch Jams, Jellies, Pickles, Condiments, and More", price: "£30.52", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/foolproof-preserving-a-guide-to-small-batch-jams-jellies-pickles-condiments-and-more-a-foolproof-guide-to-making-small-batch-jams-jellies-pickles-condiments-and-more_978/index.html" },
+  { name: "Chase Me (Paris Nights #2)", price: "£25.27", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/chase-me-paris-nights-2_977/index.html" },
+  { name: "Black Dust", price: "£34.53", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/black-dust_976/index.html" },
+  { name: "Birdsong: A Story in Pictures", price: "£54.64", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/birdsong-a-story-in-pictures_975/index.html" },
+  { name: "America's Cradle of Quarterbacks: Western Pennsylvania's Football Factory from Johnny Unitas to Joe Montana", price: "£22.50", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/americas-cradle-of-quarterbacks-western-pennsylvanias-football-factory-from-johnny-unitas-to-joe-montana_974/index.html" },
+  { name: "Aladdin and His Wonderful Lamp", price: "£53.13", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/aladdin-and-his-wonderful-lamp_973/index.html" },
+  { name: "Worlds Elsewhere: Journeys Around Shakespeare's Globe", price: "£40.30", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/worlds-elsewhere-journeys-around-shakespeares-globe_972/index.html" },
+  { name: "Wall and Piece", price: "£44.18", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/wall-and-piece_971/index.html" },
+  { name: "The Four Agreements: A Practical Guide to Personal Freedom", price: "£17.66", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/the-four-agreements-a-practical-guide-to-personal-freedom_970/index.html" },
+  { name: "The Five Love Languages: How to Express Heartfelt Commitment to Your Mate", price: "£31.05", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/the-five-love-languages-how-to-express-heartfelt-commitment-to-your-mate_969/index.html" },
+  { name: "The Elephant Tree", price: "£23.82", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/the-elephant-tree_968/index.html" },
+  { name: "The Bear and the Piano", price: "£36.89", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/the-bear-and-the-piano_967/index.html" },
+  { name: "Sophie's World", price: "£15.94", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/sophies-world_966/index.html" },
+  { name: "Penny Maybe", price: "£33.29", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/penny-maybe_965/index.html" },
+  { name: "Maude (1883-1993): She Grew Up with the Country", price: "£18.02", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/maude-1883-1993she-grew-up-with-the-country_964/index.html" },
+  { name: "In a Dark, Dark Wood", price: "£19.63", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/in-a-dark-dark-wood_963/index.html" },
+  { name: "Behind Closed Doors", price: "£52.22", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/behind-closed-doors_962/index.html" },
+  { name: "You can't bury them all: Poems", price: "£33.63", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/you-cant-bury-them-all-poems_961/index.html" },
+  { name: "Slow States of Collapse: Poems", price: "£57.31", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/slow-states-of-collapse-poems_960/index.html" },
+  { name: "Reasons to Stay Alive", price: "£26.41", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/reasons-to-stay-alive_959/index.html" },
+  { name: "Private Paris (Private #10)", price: "£47.61", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/private-paris-private-10_958/index.html" },
+  { name: "#HigherSelfie: Wake Up Your Life. Free Your Soul. Find Your Tribe.", price: "£23.11", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/higherselfie-wake-up-your-life-free-your-soul-find-your-tribe_957/index.html" },
+  { name: "Without Borders (Wanderlove #1)", price: "£45.07", availability: "In stock", rating: "Two", url: "https://books.toscrape.com/catalogue/without-borders-wanderlove-1_956/index.html" },
+  { name: "When We Collided", price: "£31.77", availability: "In stock", rating: "One", url: "https://books.toscrape.com/catalogue/when-we-collided_955/index.html" },
+  { name: "We Love You, Charlie Freeman", price: "£50.27", availability: "In stock", rating: "Five", url: "https://books.toscrape.com/catalogue/we-love-you-charlie-freeman_954/index.html" },
+  { name: "Untitled Collection: Sabbath Poems 2014", price: "£14.27", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/untitled-collection-sabbath-poems-2014_953/index.html" },
+  { name: "Unseen City: The Majesty of Pigeons, the Discreet Charm of Snails & Other Wonders of the Urban Wilderness", price: "£44.18", availability: "In stock", rating: "Four", url: "https://books.toscrape.com/catalogue/unseen-city-the-majesty-of-pigeons-the-discreet-charm-of-snails-other-wonders-of-the-urban-wilderness_952/index.html" },
+  { name: "Unicorn Tracks", price: "£18.78", availability: "In stock", rating: "Three", url: "https://books.toscrape.com/catalogue/unicorn-tracks_951/index.html" }
+];
+
+function renderStars(ratingWord) {
+  const n = ratingMap[ratingWord] || 0;
+  return Array.from({ length: 5 }, (_, i) =>
+    `<span class="${i < n ? 'star-filled' : 'star-empty'}">★</span>`
+  ).join('');
+}
+
+const tbody = document.getElementById('tbody');
+books.forEach((b, i) => {
+  const inStock = b.availability.toLowerCase().includes('in stock');
+  tbody.insertAdjacentHTML('beforeend', `
+    <tr>
+      <td class="num">${i + 1}</td>
+      <td class="name"><a href="${b.url}" target="_blank" rel="noopener">${b.name}</a></td>
+      <td class="price">${b.price}</td>
+      <td class="avail ${inStock ? 'avail-in' : 'avail-out'}">${b.availability}</td>
+      <td class="stars">${renderStars(b.rating)}</td>
+    </tr>
+  `);
+});
+</script>
+</body>
+</html>
