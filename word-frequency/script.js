@@ -9,15 +9,17 @@ const caseSensitive   = document.getElementById('case-sensitive');
 const urlInput        = document.getElementById('url-input');
 const fetchBtn        = document.getElementById('fetch-btn');
 const urlError        = document.getElementById('url-error');
+const limitMessage    = document.getElementById('limit-message');
 
 let chart = null;
 
 // ── Char counter ──────────────────────────────────────────────
 textInput.addEventListener('input', () => {
   const len = textInput.value.length;
-  charCount.textContent = `${len} / 2048`;
-  charCount.classList.toggle('warn',  len >= 1800 && len < 2048);
-  charCount.classList.toggle('limit', len === 2048);
+  charCount.textContent = `${len} / 10000`;
+  charCount.classList.toggle('warn',  len >= 9000 && len < 10000);
+  charCount.classList.toggle('limit', len === 10000);
+  limitMessage.classList.toggle('hidden', len < 10000);
   if (textInput.value.trim()) errorMessage.classList.add('hidden');
 });
 
@@ -42,9 +44,10 @@ function analyze() {
 // ── Clear ─────────────────────────────────────────────────────
 clearBtn.addEventListener('click', () => {
   textInput.value    = '';
-  charCount.textContent = '0 / 2048';
+  charCount.textContent = '0 / 10000';
   charCount.classList.remove('warn', 'limit');
   errorMessage.classList.add('hidden');
+  limitMessage.classList.add('hidden');
   resultsSection.classList.add('hidden');
   tableBody.innerHTML = '';
   if (chart) { chart.destroy(); chart = null; }
@@ -91,12 +94,12 @@ fetchBtn.addEventListener('click', async () => {
     doc.querySelectorAll('script, style, nav, header, footer').forEach(el => el.remove());
 
     const text = doc.body.textContent.replace(/\s+/g, ' ').trim();
-    textInput.value = text.slice(0, 2048);
+    textInput.value = text.slice(0, 10000);
     errorMessage.classList.add('hidden');
     const len = textInput.value.length;
-    charCount.textContent = `${len} / 2048`;
-    charCount.classList.toggle('warn',  len >= 1800 && len < 2048);
-    charCount.classList.toggle('limit', len === 2048);
+    charCount.textContent = `${len} / 10000`;
+    charCount.classList.toggle('warn',  len >= 1800 && len < 10000);
+    charCount.classList.toggle('limit', len === 10000);
   } catch {
     urlError.textContent = 'Failed to fetch the page. Check the URL and try again.';
     urlError.classList.remove('hidden');

@@ -1,73 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Word Frequency</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Word Frequency — Analisador de Frequência de Palavras</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f52d4;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --bg: #0f1117;
+      --surface: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.1);
+      --gold: #fbbf24;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand { font-weight: 700; font-size: 1.1rem; color: var(--primary); text-decoration: none; }
+    nav a.nav-link { font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    nav a.nav-link:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+
+    /* HERO */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.4);
+      color: #a5b4fc;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.2rem; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 2.5rem; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--primary); color: #fff;
+      font-size: 1rem; font-weight: 700;
+      padding: 0.8rem 2rem; border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: var(--text-muted);
+      font-size: 1rem; font-weight: 600;
+      padding: 0.8rem 1.8rem; border-radius: 8px;
+      border: 1.5px solid var(--border);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+
+    /* SCREENSHOT */
+    .screenshot-section { padding: 2rem 2rem 4rem; text-align: center; }
+    .screenshot-wrapper {
+      max-width: 760px; margin: 0 auto;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 0 60px rgba(99,102,241,0.2), 0 24px 60px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+    }
+    .screenshot-wrapper img { width: 100%; display: block; }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; border-top: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-label { display: inline-block; color: var(--primary); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .section-header h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text); margin-bottom: 0.6rem; }
+    .section-header p { color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 1rem; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; max-width: 1000px; margin: 0 auto; }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
+    .feature-icon { width: 44px; height: 44px; background: rgba(99,102,241,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* HOW */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 860px; margin: 0 auto; }
+    .step { text-align: center; }
+    .step-number { width: 50px; height: 50px; background: var(--primary); color: #fff; border-radius: 50%; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; box-shadow: 0 4px 16px rgba(99,102,241,0.4); }
+    .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text); }
+    .step p { font-size: 0.875rem; color: var(--text-muted); }
+
+    /* STACK */
+    .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; max-width: 860px; margin: 0 auto; }
+    .stack-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; text-align: center; }
+    .stack-item .stack-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .stack-item h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+    .stack-item p { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* GALLERY */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; max-width: 1000px; margin: 0 auto; }
+    .gallery-item { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+    .gallery-item img { width: 100%; display: block; transition: transform 0.3s; }
+    .gallery-item:hover img { transform: scale(1.03); }
+    .gallery-caption { padding: 0.75rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+    /* CTA */
+    .cta-section { text-align: center; padding: 5rem 2rem; border-top: 1px solid var(--border); }
+    .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 1rem; }
+    .cta-section p { color: var(--text-muted); max-width: 460px; margin: 0 auto 2rem; font-size: 1rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); color: var(--text-muted); text-align: center; padding: 2rem; font-size: 0.85rem; }
+    footer a { color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { gap: 0.75rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      section { padding: 3.5rem 1.25rem; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Word Frequency</h1>
-    <p class="subtitle">Analyze how often each word appears in a block of text.</p>
 
-    <div class="card url-card">
-      <label class="card-label" for="url-input">Analyze from a URL <span class="optional">(optional)</span></label>
-      <div class="url-row">
-        <input
-          type="url"
-          id="url-input"
-          placeholder="https://example.com"
-          aria-describedby="url-error"
-        />
-        <button id="fetch-btn" class="btn-secondary">Fetch</button>
-      </div>
-      <p id="url-error" class="error hidden" role="alert"></p>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="#">Word Frequency</a>
+    <div class="nav-links">
+      <a class="nav-link" href="#features">Funcionalidades</a>
+      <a class="nav-link" href="#how">Como usar</a>
+      <a class="nav-link" href="#gallery">Screenshots</a>
+      <a href="app.html" class="btn-primary" style="padding:0.5rem 1.2rem;font-size:0.9rem;">Abrir app &rarr;</a>
     </div>
+  </nav>
 
-    <div class="card input-card">
-      <div class="input-header">
-        <label class="card-label" for="text-input">Text to analyze</label>
-        <label class="toggle-label">
-          <input type="checkbox" id="case-sensitive" />
-          Case sensitive
-        </label>
-      </div>
-      <textarea
-        id="text-input"
-        maxlength="2048"
-        placeholder="Paste or type your text here (max 2048 characters)..."
-        rows="8"
-        aria-describedby="error-message"
-      ></textarea>
-      <div class="input-meta">
-        <span id="char-count">0 / 2048</span>
-      </div>
-      <p id="error-message" class="error hidden" role="alert">Please enter some text before analyzing.</p>
-      <div class="btn-row">
-        <button id="clear-btn" class="btn-secondary">Clear</button>
-        <button id="translate-btn">Translate</button>
-      </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">Projeto Tier 1 &mdash; Beginner</div>
+    <h1>Descubra quais palavras<br><span>você mais usa</span></h1>
+    <p>Cole um texto ou forneça uma URL e veja instantaneamente a frequência de cada palavra em um gráfico e tabela interativos.</p>
+    <div class="hero-actions">
+      <a href="app.html" class="btn-primary">&#9654; Abrir o app</a>
+      <a href="#features" class="btn-ghost">Ver funcionalidades</a>
     </div>
+  </section>
 
-    <div id="results-section" class="card results-card hidden" aria-live="polite">
-      <h2>Results</h2>
-      <div class="chart-container">
-        <canvas id="frequency-chart"></canvas>
-      </div>
-      <table id="frequency-table">
-        <thead>
-          <tr>
-            <th>Word</th>
-            <th>Frequency</th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
+  <!-- SCREENSHOT HERO -->
+  <div class="screenshot-section">
+    <div class="screenshot-wrapper">
+      <img src="shot-results.png" alt="Word Frequency mostrando gráfico de barras e tabela de resultados" />
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-header">
+      <span class="section-label">O que ele faz</span>
+      <h2>Tudo que você precisa para analisar um texto</h2>
+      <p>Simples, rápido e direto ao ponto — sem cadastro, sem dependências, sem complicação.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#128202;</div>
+        <h3>Gráfico de barras</h3>
+        <p>Visualize as 15 palavras mais frequentes em um gráfico interativo powered by Chart.js.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128203;</div>
+        <h3>Tabela ordenada</h3>
+        <p>Todas as palavras únicas listadas em ordem decrescente de frequência, com badges de ranking para o top 3.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127760;</div>
+        <h3>Análise por URL</h3>
+        <p>Informe qualquer URL pública e o app busca o conteúdo e analisa automaticamente o texto da página.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128286;</div>
+        <h3>Case sensitive</h3>
+        <p>Toggle para tratar "Palavra" e "palavra" como iguais ou diferentes, conforme sua necessidade.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127759;</div>
+        <h3>Suporte Unicode</h3>
+        <p>Funciona com acentos e caracteres especiais: é, ñ, ü, ç — ideal para textos em português.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#9855;</div>
+        <h3>Acessível</h3>
+        <p>Regiões ARIA live, descrições de campo e feedback de erro para leitores de tela.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128207;</div>
+        <h3>Até 10.000 caracteres</h3>
+        <p>Suporta textos longos de até 10.000 caracteres. Ao atingir o limite via URL, um aviso amigável informa que o conteúdo foi parcialmente capturado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="section-header">
+      <span class="section-label">Como usar</span>
+      <h2>Três passos, resultado imediato</h2>
+      <p>Nenhuma instalação, nenhum cadastro. Basta abrir e usar.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Digite ou cole o texto</h3>
+        <p>Use a textarea para inserir seu texto (até 10.000 caracteres) ou informe uma URL de página web.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Clique em Translate</h3>
+        <p>O app processa o texto, tokeniza as palavras e calcula a frequência de cada uma.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Explore os resultados</h3>
+        <p>Leia o gráfico, percorra a tabela e identifique as palavras que dominam o seu texto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="section-header">
+      <span class="section-label">Stack tecnológica</span>
+      <h2>Simples por design</h2>
+      <p>Vanilla web — sem build tool, sem bundler, sem framework. Abre direto no browser.</p>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="stack-icon">&#128196;</div>
+        <h4>HTML5</h4>
+        <p>Estrutura semântica e acessível</p>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">&#127912;</div>
+        <h4>CSS3 puro</h4>
+        <p>Sem framework, responsivo por media queries</p>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">&#9889;</div>
+        <h4>JavaScript</h4>
+        <p>Vanilla ES6+ — nenhuma dependência</p>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">&#128200;</div>
+        <h4>Chart.js</h4>
+        <p>Gráfico de barras via CDN</p>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">&#127757;</div>
+        <h4>Fetch API</h4>
+        <p>+ proxy CORS allorigins.win</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-header">
+      <span class="section-label">Screenshots</span>
+      <h2>Veja o app em ação</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="shot-initial.png" alt="Tela inicial do app" />
+        <div class="gallery-caption">Tela inicial — pronto para receber texto</div>
+      </div>
+      <div class="gallery-item">
+        <img src="shot-results.png" alt="Resultados com gráfico e tabela" />
+        <div class="gallery-caption">Resultados — gráfico + tabela com rankings</div>
+      </div>
+      <div class="gallery-item">
+        <img src="shot-error.png" alt="Mensagem de erro ao enviar campo vazio" />
+        <div class="gallery-caption">Validação — erro ao submeter campo vazio</div>
+      </div>
+      <div class="gallery-item">
+        <img src="shot-casesensitive.png" alt="Modo case sensitive ativado" />
+        <div class="gallery-caption">Case sensitive — diferencia maiúsculas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Pronto para analisar seu texto?</h2>
+    <p>Abra o app, cole qualquer trecho e descubra os padrões escondidos nas suas palavras.</p>
+    <a href="app.html" class="btn-primary">&#9654; Abrir Word Frequency</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Word Frequency &mdash; projeto <strong>Beginner Tier 1</strong> &mdash; feito com HTML, CSS e JavaScript vanilla &bull; <a href="app.html">Abrir app</a></p>
+  </footer>
+
 </body>
 </html>

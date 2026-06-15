@@ -21,7 +21,7 @@ A web app that analyzes how often each word appears in a block of text. Paste te
 ## Features
 
 ### Core
-- Textarea accepting up to 2 048 characters
+- Textarea accepting up to 10 000 characters
 - **Translate** button triggers word frequency analysis
 - Error message when the input is empty
 - Frequency table (Word / Count) sorted descending
@@ -35,7 +35,8 @@ A web app that analyzes how often each word appears in a block of text. Paste te
 - Case-sensitive toggle (default: lowercase)
 - Unicode support for accented characters (`é`, `ñ`, `ü`, …)
 - Gold / silver / bronze ranking badges for the top 3 words
-- Live character counter with visual warning near the limit
+- Live character counter with visual warning near the limit (at 9 000 chars)
+- Friendly notice when the 10 000-character limit is reached (page content was truncated)
 - Accessibility: `aria-live` on results, `aria-describedby` on inputs
 
 ---
@@ -94,8 +95,9 @@ Then open `http://localhost:8080` in your browser.
 
 ```
 word-frequency/
-├── index.html    # Page structure
-├── style.css     # Styles
+├── index.html    # Landing page
+├── app.html      # Application page
+├── style.css     # Styles (dark mode)
 ├── script.js     # Analysis logic and rendering
 ├── serve.ps1     # PowerShell dev server
 └── App.md        # Original project specification
