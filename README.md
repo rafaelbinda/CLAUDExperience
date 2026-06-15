@@ -1,112 +1,112 @@
-# 🤖 Claude Code — Guia de Bolso
+# Claude Code — Quick Reference
 
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20VS%20Code-blue)
-![Status](https://img.shields.io/badge/status-ativo-brightgreen)
-![Idioma](https://img.shields.io/badge/idioma-PT--BR-yellow)
-![Licença](https://img.shields.io/badge/licença-MIT-lightgrey)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Language](https://img.shields.io/badge/language-EN-yellow)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-> Para devs experientes que estão começando com Claude Code. Sem enrolação.
-
----
-
-## 📋 Sumário
-
-- [1. Instalação no Windows](#1-instalação-no-windows)
-- [2. Integração com VS Code](#2-integração-com-vs-code)
-- [3. Estrutura de Projeto](#3-estrutura-de-projeto)
-- [4. CLAUDE.md — O Briefing do Projeto](#4-claudemd--o-briefing-do-projeto)
-- [5. Comandos Slash Essenciais](#5-comandos-slash-essenciais)
-- [6. Atalhos de Teclado no Terminal](#6-atalhos-de-teclado-no-terminal)
-- [7. Modos de Execução](#7-modos-de-execução-níveis-de-autonomia)
-- [8. Prefixos Especiais no Chat](#8-prefixos-especiais-no-chat)
-- [9. Erros Comuns](#9-erros-comuns-e-como-evitar)
-- [10. Fluxo de Trabalho Recomendado](#10-fluxo-de-trabalho-recomendado)
-- [11. Dicas para Quem Vem de Desenvolvimento Tradicional](#11-dicas-para-quem-vem-de-desenvolvimento-tradicional)
-- [12. Referências](#12-referências)
+> For experienced developers getting started with Claude Code. No fluff.
 
 ---
 
-## 1. Instalação no Windows
+## Table of Contents
 
-### Opção A — Instalador nativo (recomendado)
+- [1. Installation on Windows](#1-installation-on-windows)
+- [2. VS Code Integration](#2-vs-code-integration)
+- [3. Project Structure](#3-project-structure)
+- [4. CLAUDE.md — The Project Brief](#4-claudemd--the-project-brief)
+- [5. Essential Slash Commands](#5-essential-slash-commands)
+- [6. Terminal Keyboard Shortcuts](#6-terminal-keyboard-shortcuts)
+- [7. Execution Modes](#7-execution-modes-autonomy-levels)
+- [8. Special Chat Prefixes](#8-special-chat-prefixes)
+- [9. Common Mistakes](#9-common-mistakes-and-how-to-avoid-them)
+- [10. Recommended Workflow](#10-recommended-workflow)
+- [11. Tips for Developers Coming from Traditional Development](#11-tips-for-developers-coming-from-traditional-development)
+- [12. References](#12-references)
 
-**Zero dependências. Auto-atualiza em background. Um único comando.**
+---
 
-Abra o **PowerShell** e rode:
+## 1. Installation on Windows
+
+### Option A — Native installer (recommended)
+
+**Zero dependencies. Auto-updates in the background. One single command.**
+
+Open **PowerShell** and run:
 
 ```powershell
 irm https://claude.ai/install.ps1 | iex
 ```
 
-> Não precisa de Node.js, npm ou configuração de PATH. Este é o método oficial da Anthropic desde 2026.
+> No Node.js, npm, or PATH configuration needed. This is the official Anthropic method since 2026.
 
-### ⚠️ Erro de PATH após instalação (caso comum)
+### ⚠️ PATH error after installation (common case)
 
-O instalador pode avisar que o diretório `C:\Users\SEU_USUARIO\.local\bin` não está no PATH, fazendo com que `claude` não seja reconhecido no terminal.
+The installer may warn that `C:\Users\YOUR_USER\.local\bin` is not in the PATH, causing `claude` to be unrecognized in the terminal.
 
-**Correção via PowerShell:**
+**Fix via PowerShell:**
 
 ```powershell
 [Environment]::SetEnvironmentVariable(
   "Path",
-  [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Users\SEU_USUARIO\.local\bin",
+  [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Users\YOUR_USER\.local\bin",
   "User"
 )
 ```
 
-> Substitua `SEU_USUARIO` pelo seu usuário do Windows. Depois **feche e reabra o terminal** — obrigatório para recarregar o PATH.
+> Replace `YOUR_USER` with your Windows username. Then **close and reopen the terminal** — required to reload the PATH.
 
-**Correção via interface gráfica:**
+**Fix via GUI:**
 
-1. `Win + R` → digite `sysdm.cpl` → Enter
-2. Aba **Avançado** → botão **Variáveis de Ambiente**
-3. Em **Variáveis do usuário**, clique em **Path** → **Editar**
-4. Clique em **Novo** → cole `C:\Users\SEU_USUARIO\.local\bin`
-5. OK em tudo → feche e reabra o terminal
+1. `Win + R` → type `sysdm.cpl` → Enter
+2. **Advanced** tab → **Environment Variables** button
+3. Under **User variables**, click **Path** → **Edit**
+4. Click **New** → paste `C:\Users\YOUR_USER\.local\bin`
+5. OK everything → close and reopen the terminal
 
-**Confirme a instalação:**
+**Confirm the installation:**
 
 ```powershell
 claude --version
 ```
 
-**Diagnóstico (se ainda não funcionar):**
+**Diagnostics (if it still doesn't work):**
 
 ```powershell
-$env:PATH  # verifica se o caminho aparece na lista
+$env:PATH  # check if the path appears in the list
 ```
 
 ---
 
-### Opção B — Via npm (se preferir fixar versão)
+### Option B — Via npm (if you prefer to pin a version)
 
-Requer Node.js 18+. Use **nvm** para gerenciar versões do Node:
+Requires Node.js 18+. Use **nvm** to manage Node versions:
 
 ```powershell
-# Instale o nvm para Windows em: github.com/coreybutler/nvm-windows
+# Install nvm for Windows at: github.com/coreybutler/nvm-windows
 nvm install 20
 nvm use 20
 
-# Instala o Claude Code
+# Install Claude Code
 npm install -g @anthropic-ai/claude-code
 
-# Confirma
+# Confirm
 claude --version
 ```
 
-> ⚠️ Nunca use `npm install` como Administrador. Se der erro de permissão, instale o Node via nvm (que fica no diretório do usuário).
+> ⚠️ Never run `npm install` as Administrator. If you get a permission error, install Node via nvm (which installs in the user directory).
 
 ---
 
-### Autenticação
+### Authentication
 
-Na primeira execução, abre o browser automaticamente para autenticar:
+On first run, a browser window opens automatically for authentication:
 
 ```bash
 claude
 ```
 
-Ou autentique via API key (útil em ambientes headless):
+Or authenticate via API key (useful in headless environments):
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -115,224 +115,224 @@ claude
 
 ---
 
-## 2. Integração com VS Code
+## 2. VS Code Integration
 
-### Terminal integrado
+### Integrated terminal
 
-O Claude Code roda direto no terminal integrado do VS Code (`` Ctrl + ` ``). Nenhuma extensão obrigatória — é só abrir o terminal e chamar `claude`.
+Claude Code runs directly in the VS Code integrated terminal (`` Ctrl + ` ``). No extension required — just open the terminal and call `claude`.
 
-### Extensão oficial
+### Official extension
 
-Instale a extensão **Claude Code** na marketplace do VS Code para ter o agente acessível como painel lateral, com suporte a diff visual e aprovação de edições dentro do próprio editor.
+Install the **Claude Code** extension from the VS Code marketplace to have the agent available as a side panel, with visual diff support and edit approval inside the editor.
 
-### Atalhos úteis no VS Code + Claude Code
+### Useful shortcuts in VS Code + Claude Code
 
-| Ação | Como fazer |
+| Action | How |
 |---|---|
-| Abrir terminal integrado | `` Ctrl + ` `` |
-| Abrir nova aba de terminal | `` Ctrl + Shift + ` `` |
-| Navegar entre terminais | `Ctrl + PageUp / PageDown` |
-| Tela cheia no terminal | `Ctrl + Shift + P` → "Toggle Terminal Full Screen" |
+| Open integrated terminal | `` Ctrl + ` `` |
+| Open new terminal tab | `` Ctrl + Shift + ` `` |
+| Navigate between terminals | `Ctrl + PageUp / PageDown` |
+| Full screen terminal | `Ctrl + Shift + P` → "Toggle Terminal Full Screen" |
 
 ---
 
-## 3. Estrutura de Projeto
+## 3. Project Structure
 
 ```
-meu-projeto/
-├── CLAUDE.md                  # instruções permanentes do projeto ← ESSENCIAL
+my-project/
+├── CLAUDE.md                  # permanent project instructions ← ESSENTIAL
 ├── .claude/
-│   ├── settings.json          # config do time (versionado no Git)
-│   ├── settings.local.json    # config pessoal (gitignored)
-│   ├── commands/              # seus slash commands customizados
-│   │   └── deploy.md          # vira o comando /deploy
-│   ├── agents/                # subagents especializados
-│   └── hooks/                 # scripts disparados em eventos do agente
+│   ├── settings.json          # team config (versioned in Git)
+│   ├── settings.local.json    # personal config (gitignored)
+│   ├── commands/              # your custom slash commands
+│   │   └── deploy.md          # becomes the /deploy command
+│   ├── agents/                # specialized subagents
+│   └── hooks/                 # scripts triggered on agent events
 └── ~/.claude/
-    └── CLAUDE.md              # preferências globais (todos os projetos)
+    └── CLAUDE.md              # global preferences (all projects)
 ```
 
-**Regra de ouro:** versione `CLAUDE.md`, `commands/`, `agents/` no Git. Coloque `settings.local.json` no `.gitignore`.
+**Golden rule:** version `CLAUDE.md`, `commands/`, `agents/` in Git. Put `settings.local.json` in `.gitignore`.
 
 ---
 
-## 4. CLAUDE.md — O Briefing do Projeto
+## 4. CLAUDE.md — The Project Brief
 
-Carregado automaticamente em toda sessão. É o "onboarding" que você daria a um dev novo. **Mantenha abaixo de 200 linhas.**
+Loaded automatically every session. It is the "onboarding" you would give a new developer. **Keep it under 200 lines.**
 
-### Template mínimo
+### Minimal template
 
 ```markdown
-# Projeto
-App de gestão de pedidos em Node.js + PostgreSQL.
+# Project
+Order management app in Node.js + PostgreSQL.
 
-# Comandos
-- `npm run dev` — sobe local na :3000
-- `npm test` — Jest (rode antes de commitar)
-- `npm run migrate` — aplica migrations
+# Commands
+- `npm run dev` — starts locally on :3000
+- `npm test` — Jest (run before committing)
+- `npm run migrate` — applies migrations
 
-# Convenções
+# Conventions
 - TypeScript strict mode
-- Commits em conventional commits (feat:, fix:, chore:)
-- Pastas: src/controllers/, src/services/, src/models/
+- Conventional commits (feat:, fix:, chore:)
+- Folders: src/controllers/, src/services/, src/models/
 
-# Não faça
-- Não instale dependências sem perguntar
-- Não toque em /migrations (gerado automaticamente)
-- Não use `any` em TypeScript
+# Do not
+- Do not install dependencies without asking
+- Do not touch /migrations (auto-generated)
+- Do not use `any` in TypeScript
 
-# Quando travar
-Pergunte antes de supor. Suposições silenciosas custam caro.
+# When stuck
+Ask before assuming. Silent assumptions are costly.
 ```
 
-### Boas práticas
+### Best practices
 
-- **Imperativo > descritivo:** "Use TypeScript strict" bate "este projeto usa TypeScript strict"
-- **Mostre, não conte:** comandos exatos, paths exatos, exemplos curtos
-- **Liste o que NÃO fazer:** pastas geradas, libs banidas, padrões em deprecação
-- **Atualize em tempo real:** no chat, prefixe com `#` → Claude propõe adicionar ao CLAUDE.md
-
----
-
-## 5. Comandos Slash Essenciais
-
-### Gerenciamento de sessão
-
-| Comando | O que faz |
-|---|---|
-| `/init` | Gera o CLAUDE.md inicial lendo seu repo. **Sempre o primeiro comando num projeto novo.** |
-| `/clear` | Limpa o contexto e começa do zero. Use entre tarefas não-relacionadas. |
-| `/compact` | Resume a conversa mantendo o essencial. Para sessões longas que precisam continuar. |
-| `/resume` | Retoma a sessão anterior. Salva quando o terminal fecha sem querer. |
-| `/help` | Lista tudo disponível, incluindo seus comandos customizados. |
-
-### Controle de custo e modelo
-
-| Comando | O que faz |
-|---|---|
-| `/cost` | **Mostra quantos tokens e quanto custou a sessão até agora.** Use para decidir quando trocar de modelo. |
-| `/model` | Troca o modelo em uso (Opus / Sonnet / Haiku). Calibre pela complexidade da tarefa. |
-
-> 💡 **Dica de custo:** Sonnet resolve ~90% dos casos. Reserve Opus para arquitetura e problemas complexos. Use `/cost` regularmente para não ter surpresas.
-
-### Git e código
-
-| Comando | O que faz |
-|---|---|
-| `/review` | Code review dos arquivos modificados. **Rode sempre antes de criar um PR.** |
-| `/pr` | Cria pull request com título e descrição gerados a partir do diff. |
-
-### Extensibilidade
-
-| Comando | O que faz |
-|---|---|
-| `/mcp` | Gerencia servidores MCP conectados (GitHub, Postgres, Linear, Sentry...). |
-| `/agents` | Lista subagents disponíveis do projeto e globais. |
+- **Imperative > descriptive:** "Use TypeScript strict" beats "this project uses TypeScript strict"
+- **Show, don't tell:** exact commands, exact paths, short examples
+- **List what NOT to do:** generated folders, banned libs, deprecated patterns
+- **Update in real time:** in chat, prefix with `#` → Claude proposes adding it to CLAUDE.md
 
 ---
 
-## 6. Atalhos de Teclado no Terminal
+## 5. Essential Slash Commands
 
-| Atalho | Ação |
+### Session management
+
+| Command | What it does |
 |---|---|
-| `Shift + Tab` | Liga/desliga auto-accept (aceita edições automaticamente sem pedir confirmação) |
-| `Esc` | Interrompe a tarefa atual |
-| `Esc Esc` | Edita a última mensagem enviada |
-| `Ctrl + R` | Busca no histórico de comandos do terminal |
-| `!comando` | Roda comando shell direto sem sair do Claude (ex: `!git status`) |
-| `#instrução` | Atualiza o CLAUDE.md com a instrução digitada |
+| `/init` | Generates the initial CLAUDE.md by reading your repo. **Always the first command in a new project.** |
+| `/clear` | Clears the context and starts from scratch. Use between unrelated tasks. |
+| `/compact` | Summarizes the conversation keeping what matters. For long sessions that need to continue. |
+| `/resume` | Resumes the previous session. Useful when the terminal closes unexpectedly. |
+| `/help` | Lists everything available, including your custom commands. |
+
+### Cost and model control
+
+| Command | What it does |
+|---|---|
+| `/cost` | **Shows how many tokens were used and how much the session has cost so far.** Use to decide when to switch models. |
+| `/model` | Switches the active model (Opus / Sonnet / Haiku). Calibrate by task complexity. |
+
+> 💡 **Cost tip:** Sonnet handles ~90% of cases. Reserve Opus for architecture and complex problems. Run `/cost` regularly to avoid surprises.
+
+### Git and code
+
+| Command | What it does |
+|---|---|
+| `/review` | Code review of modified files. **Always run before creating a PR.** |
+| `/pr` | Creates a pull request with title and description generated from the diff. |
+
+### Extensibility
+
+| Command | What it does |
+|---|---|
+| `/mcp` | Manages connected MCP servers (GitHub, Postgres, Linear, Sentry…). |
+| `/agents` | Lists available subagents for the project and globally. |
 
 ---
 
-## 7. Modos de Execução (Níveis de Autonomia)
+## 6. Terminal Keyboard Shortcuts
 
-| Modo | O que faz | Quando usar |
+| Shortcut | Action |
+|---|---|
+| `Shift + Tab` | Toggle auto-accept (accepts edits automatically without asking for confirmation) |
+| `Esc` | Interrupts the current task |
+| `Esc Esc` | Edits the last sent message |
+| `Ctrl + R` | Searches the terminal command history |
+| `!command` | Runs a shell command directly without leaving Claude (e.g. `!git status`) |
+| `#instruction` | Updates CLAUDE.md with the typed instruction |
+
+---
+
+## 7. Execution Modes (Autonomy Levels)
+
+| Mode | What it does | When to use |
 |---|---|---|
-| **Read-only** | Só lê, propõe diffs. Não toca em nada. | Explorar base de código alheia ou auditar. |
-| **Suggest** | Propõe mudanças e pede confirmação a cada passo. | **Modo padrão para começar.** Você aprova tudo. |
-| **Auto-edit** | Edita arquivos sozinho, pergunta antes de rodar comandos. | Bom equilíbrio entre velocidade e controle. |
-| **Full-auto** | Executa tudo em sandbox sem pedir confirmação. | Tarefas longas e paralelas em ambiente isolado. |
+| **Read-only** | Only reads, proposes diffs. Touches nothing. | Exploring an unfamiliar codebase or auditing. |
+| **Suggest** | Proposes changes and asks for confirmation at each step. | **Default mode to start.** You approve everything. |
+| **Auto-edit** | Edits files on its own, asks before running commands. | Good balance between speed and control. |
+| **Full-auto** | Executes everything in a sandbox without asking for confirmation. | Long and parallel tasks in an isolated environment. |
 
-> 🔰 **Para quem está começando:** comece no modo `suggest`, observe o que o agente faz e suba a autonomia gradualmente conforme ganha confiança.
+> 🔰 **For beginners:** start in `suggest` mode, observe what the agent does, and increase autonomy gradually as you gain confidence.
 
 ---
 
-## 8. Prefixos Especiais no Chat
+## 8. Special Chat Prefixes
 
-| Prefixo | Efeito |
+| Prefix | Effect |
 |---|---|
-| `# instrução` | Adiciona a instrução diretamente ao CLAUDE.md do projeto |
-| `! comando` | Executa um comando shell sem sair da sessão |
-| `@arquivo` | Referencia um arquivo específico para contexto |
+| `# instruction` | Adds the instruction directly to the project's CLAUDE.md |
+| `! command` | Executes a shell command without leaving the session |
+| `@file` | References a specific file for context |
 
 ---
 
-## 9. Erros Comuns (e como evitar)
+## 9. Common Mistakes (and How to Avoid Them)
 
-| Erro | Por que acontece | Como evitar |
+| Mistake | Why it happens | How to avoid |
 |---|---|---|
-| Pular o `/init` | Sem CLAUDE.md, ele adivinha convenções e erra | Sempre comece por `/init` num projeto novo |
-| CLAUDE.md gigante | Detalhe demais polui o contexto da sessão | Mantenha < 200 linhas. Quebre em sub-CLAUDE.md por pasta |
-| Não rodar `/review` antes do PR | Passa bobagem que seria fácil de pegar | Rode `/review` sempre antes de criar PR |
-| Escrever descritivo no CLAUDE.md | "Este projeto usa X" é menos eficaz | Use imperativos: "Use X", "Não faça Y" |
-| Deixar o Claude decidir arquitetura | Implementação ≠ decisão arquitetural | Use para implementar. Arquitetura pede revisão humana |
-| Ignorar `/compact` | Sessão longa = tokens caros + contexto poluído | Compacte entre tarefas não-relacionadas |
-| Sessão longa sem `/cost` | Gasto acumulado sem perceber | Rode `/cost` regularmente para monitorar |
-| `claude` não reconhecido após instalar | Diretório `.local\bin` não está no PATH | Adicione ao PATH e reabra o terminal (ver seção 1) |
+| Skipping `/init` | Without CLAUDE.md, it guesses conventions and gets them wrong | Always start with `/init` in a new project |
+| Bloated CLAUDE.md | Too much detail pollutes the session context | Keep it under 200 lines. Split into sub-CLAUDE.md per folder |
+| Not running `/review` before a PR | Trivial issues slip through | Always run `/review` before creating a PR |
+| Writing descriptive CLAUDE.md | "This project uses X" is less effective | Use imperatives: "Use X", "Do not do Y" |
+| Letting Claude decide architecture | Implementation ≠ architectural decision | Use it to implement. Architecture requires human review |
+| Ignoring `/compact` | Long session = expensive tokens + polluted context | Compact between unrelated tasks |
+| Long session without `/cost` | Accumulated spend goes unnoticed | Run `/cost` regularly to monitor |
+| `claude` not recognized after install | `.local\bin` directory not in PATH | Add to PATH and reopen the terminal (see section 1) |
 
 ---
 
-## 10. Fluxo de Trabalho Recomendado
+## 10. Recommended Workflow
 
 ```
-1. Abra o terminal integrado do VS Code (Ctrl + `)
-2. Navegue até o projeto: cd meu-projeto
-3. Inicie o Claude: claude
-4. Primeiro uso no projeto: /init  → edite o CLAUDE.md gerado
-5. Descreva a tarefa em linguagem natural
-6. Revise as mudanças propostas antes de aceitar
-7. Antes do PR: /review
-8. Para ver o gasto: /cost
-9. Entre tarefas diferentes: /clear ou /compact
+1. Open the VS Code integrated terminal (Ctrl + `)
+2. Navigate to the project: cd my-project
+3. Start Claude: claude
+4. First use in the project: /init → edit the generated CLAUDE.md
+5. Describe the task in natural language
+6. Review the proposed changes before accepting
+7. Before the PR: /review
+8. To check spending: /cost
+9. Between different tasks: /clear or /compact
 ```
 
 ---
 
-## 11. Dicas para Quem Vem de Desenvolvimento Tradicional
+## 11. Tips for Developers Coming from Traditional Development
 
-- **Não é um autocomplete** — é um agente que lê todo o projeto e toma decisões. Trate como um dev júnior que precisa de contexto.
-- **Contexto é tudo** — quanto mais específico o CLAUDE.md, melhores as respostas. Invista 10 minutos configurando antes de começar.
-- **Itere** — a segunda e terceira resposta quase sempre são melhores que a primeira. Peça ajustes na mesma sessão.
-- **Monitore os tokens** — use `/cost` para entender quanto cada tipo de tarefa consome. Isso guia a escolha de modelo.
-- **Aprovação humana** — para ações com efeito (PR, deploy, query no banco), peça o plano primeiro, depois autorize.
+- **It is not autocomplete** — it is an agent that reads the entire project and makes decisions. Treat it like a junior developer who needs context.
+- **Context is everything** — the more specific the CLAUDE.md, the better the responses. Invest 10 minutes configuring it before you start.
+- **Iterate** — the second and third response are almost always better than the first. Ask for adjustments in the same session.
+- **Monitor tokens** — use `/cost` to understand how much each type of task consumes. This guides your model choice.
+- **Human approval** — for consequential actions (PR, deploy, database query), ask for the plan first, then authorize.
 
 ---
 
-## 12. Referências
+## 12. References
 
-| Recurso | Link |
+| Resource | Link |
 |---|---|
-| Documentação oficial Claude Code | https://docs.claude.com/en/docs/claude-code/overview |
+| Official Claude Code documentation | https://docs.claude.com/en/docs/claude-code/overview |
 | npm package | https://www.npmjs.com/package/@anthropic-ai/claude-code |
-| Suporte Claude.ai | https://support.claude.com |
-| Repositório de Skills da Anthropic | https://github.com/anthropics/skills |
-| Este repositório | https://github.com/rafaelbinda/ClaudeExperience |
+| Claude.ai support | https://support.claude.com |
+| Anthropic Skills repository | https://github.com/anthropics/skills |
+| This repository | https://github.com/rafaelbinda/CLAUDExperience |
 
 ---
 
-## 🤝 Contribuindo
+## Contributing
 
-Encontrou algo desatualizado ou quer adicionar um comando que usa no dia a dia? Abra uma [issue](https://github.com/rafaelbinda/ClaudeExperience/issues) ou um [pull request](https://github.com/rafaelbinda/ClaudeExperience/pulls). Este é um guia vivo — cresce com o uso.
+Found something outdated or want to add a command you use daily? Open an [issue](https://github.com/rafaelbinda/CLAUDExperience/issues) or a [pull request](https://github.com/rafaelbinda/CLAUDExperience/pulls). This is a living guide — it grows with use.
 
 ---
 
-## 📄 Licença
+## License
 
-Distribuído sob a licença MIT. Veja [`LICENSE`](LICENSE) para mais informações.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 ---
 
 <p align="center">
-  Feito com ☕ e muito <code>/cost</code> para não estourar o limite &nbsp;·&nbsp;
-  <a href="https://github.com/rafaelbinda/ClaudeExperience">rafaelbinda/ClaudeExperience</a>
+  Made with ☕ and plenty of <code>/cost</code> to keep the bill in check &nbsp;·&nbsp;
+  <a href="https://github.com/rafaelbinda/CLAUDExperience">rafaelbinda/CLAUDExperience</a>
 </p>

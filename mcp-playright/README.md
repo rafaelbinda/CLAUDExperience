@@ -1,43 +1,43 @@
-# MCP Playwright — Guia de Instalação
+# MCP Playwright — Installation Guide
 
-Passo a passo para instalar e configurar o **MCP Playwright** no Claude Code, permitindo que o Claude navegue, extraia dados e interaja com páginas web via linguagem natural.
-
----
-
-## O que foi construído neste projeto
-
-Como prova de conceito do MCP Playwright, o Claude navegou autonomamente pelo site [books.toscrape.com](https://books.toscrape.com/) — um sandbox público para praticar web scraping — e coletou dados de **50 livros** distribuídos em 3 páginas.
-
-Para cada livro foram extraídos: título, preço, disponibilidade, avaliação em estrelas e link direto para a página do produto. Com esses dados, o Claude gerou o arquivo [`index.html`](index.html): uma tabela com tema escuro, links clicáveis e estrelas de avaliação renderizadas em HTML.
-
-Todo o processo — navegação, extração de dados e geração do HTML — foi conduzido via linguagem natural, sem nenhum script escrito manualmente.
+Step-by-step guide to install and configure **MCP Playwright** in Claude Code, enabling Claude to browse, extract data, and interact with web pages using natural language.
 
 ---
 
-## O que é MCP Playwright?
+## What was built in this project
 
-**MCP** (Model Context Protocol) é um protocolo que permite ao Claude interagir com ferramentas externas em tempo real. O **MCP Playwright** expõe as capacidades do [Playwright](https://playwright.dev/) como ferramentas chamáveis pelo Claude, sem que você precise escrever scripts manualmente.
+As a proof of concept for MCP Playwright, Claude autonomously navigated [books.toscrape.com](https://books.toscrape.com/) — a public sandbox for practicing web scraping — and collected data from **50 books** across 3 pages.
 
-Com ele você pode pedir ao Claude coisas como:
-- _"Acesse esse site e colete os dados da tabela"_
-- _"Tire um screenshot desta página"_
-- _"Preencha esse formulário e envie"_
+For each book the following fields were extracted: title, price, availability, star rating, and a direct link to the product page. From that data, Claude generated [`index.html`](index.html): a dark-themed table with clickable links and HTML-rendered star ratings.
+
+The entire process — navigation, data extraction, and HTML generation — was driven by natural language, with no scripts written manually.
 
 ---
 
-## Passo 1 — Instalar o Node.js
+## What is MCP Playwright?
 
-O MCP Playwright roda sobre Node.js. Baixe e instale a versão **LTS** em:
+**MCP** (Model Context Protocol) is a protocol that allows Claude to interact with external tools in real time. **MCP Playwright** exposes [Playwright](https://playwright.dev/) capabilities as tools Claude can call directly, without you writing any scripts.
+
+With it you can ask Claude things like:
+- _"Go to this site and collect the data from the table"_
+- _"Take a screenshot of this page"_
+- _"Fill out this form and submit it"_
+
+---
+
+## Step 1 — Install Node.js
+
+MCP Playwright runs on Node.js. Download and install the **LTS** version at:
 
 **https://nodejs.org/**
 
-> No Windows, use o instalador `.msi`. Marque a opção **"Add to PATH"** durante a instalação.
+> On Windows, use the `.msi` installer. Check the **"Add to PATH"** option during installation.
 
 ---
 
-## Passo 2 — Verificar a instalação do Node.js
+## Step 2 — Verify the Node.js installation
 
-Abra um terminal (PowerShell ou CMD) e execute:
+Open a terminal (PowerShell or CMD) and run:
 
 ```powershell
 node --version
@@ -45,7 +45,7 @@ npm --version
 npx --version
 ```
 
-Você deve ver as versões instaladas, por exemplo:
+You should see the installed versions, for example:
 
 ```
 v22.13.1
@@ -53,19 +53,19 @@ v22.13.1
 10.9.2
 ```
 
-Se algum comando não for reconhecido, feche e reabra o terminal para recarregar o PATH.
+If any command is not recognized, close and reopen the terminal to reload the PATH.
 
 ---
 
-## Passo 3 — Verificar a instalação do Claude Code
+## Step 3 — Verify the Claude Code installation
 
-Confirme que o Claude Code está instalado:
+Confirm Claude Code is installed:
 
 ```powershell
 claude --version
 ```
 
-Se não estiver instalado, instale via PowerShell:
+If it is not installed, run:
 
 ```powershell
 irm https://claude.ai/install.ps1 | iex
@@ -73,9 +73,9 @@ irm https://claude.ai/install.ps1 | iex
 
 ---
 
-## Passo 4 — Criar o arquivo de configuração do MCP
+## Step 4 — Create the MCP configuration file
 
-Dentro da pasta do seu projeto, crie o arquivo `.mcp.json` com o seguinte conteúdo:
+Inside your project folder, create a `.mcp.json` file with the following content:
 
 ```json
 {
@@ -90,94 +90,94 @@ Dentro da pasta do seu projeto, crie o arquivo `.mcp.json` com o seguinte conte�
 }
 ```
 
-> O `npx` vai baixar e executar o servidor MCP Playwright automaticamente na primeira vez que o Claude Code for iniciado. Não é necessário instalar nada globalmente.
+> `npx` will download and run the MCP Playwright server automatically the first time Claude Code starts. No global installation required.
 
 ---
 
-## Passo 5 — Iniciar o Claude Code no projeto
+## Step 5 — Start Claude Code in the project
 
-Navegue até a pasta do projeto e inicie o Claude Code:
+Navigate to the project folder and start Claude Code:
 
 ```powershell
-cd meu-projeto
+cd my-project
 claude
 ```
 
-Na primeira execução com o `.mcp.json` presente, o Claude Code detecta o arquivo e carrega o MCP Playwright automaticamente.
+On the first run with `.mcp.json` present, Claude Code detects the file and loads MCP Playwright automatically.
 
 ---
 
-## Passo 6 — Confirmar que o MCP está ativo
+## Step 6 — Confirm the MCP is active
 
-Dentro da sessão do Claude Code, verifique os MCPs carregados com o comando:
+Inside the Claude Code session, check the loaded MCPs with:
 
 ```
 /mcp
 ```
 
-Você deve ver `playwright` listado como servidor ativo.
+You should see `playwright` listed as an active server.
 
 ---
 
-## Passo 7 — Testar o MCP
+## Step 7 — Test the MCP
 
-Peça ao Claude algo simples para confirmar que está funcionando:
+Ask Claude something simple to confirm it is working:
 
-> _"Acesse https://example.com e me diga o título da página"_
+> _"Go to https://example.com and tell me the page title"_
 
-O Claude vai invocar `browser_navigate` e retornar o resultado. Se funcionar, o MCP está configurado corretamente.
+Claude will invoke `browser_navigate` and return the result. If it works, the MCP is correctly configured.
 
 ---
 
-## Ferramentas disponíveis
+## Available tools
 
-Após a configuração, o Claude passa a ter acesso às seguintes ferramentas:
+After setup, Claude has access to the following tools:
 
-| Ferramenta | O que faz |
+| Tool | What it does |
 |---|---|
-| `browser_navigate` | Navega para uma URL |
-| `browser_evaluate` | Executa JavaScript na página e retorna o resultado |
-| `browser_snapshot` | Captura a árvore de acessibilidade da página |
-| `browser_take_screenshot` | Captura screenshot da viewport |
-| `browser_click` | Clica em um elemento |
-| `browser_type` | Digita texto em um campo |
-| `browser_fill_form` | Preenche formulários |
-| `browser_select_option` | Seleciona opção em um `<select>` |
-| `browser_hover` | Passa o mouse sobre um elemento |
-| `browser_press_key` | Pressiona uma tecla do teclado |
-| `browser_wait_for` | Aguarda um seletor ou condição |
-| `browser_network_requests` | Lista as requisições de rede da página |
-| `browser_console_messages` | Retorna os logs do console do browser |
-| `browser_tabs` | Lista as abas abertas |
-| `browser_close` | Fecha o browser |
+| `browser_navigate` | Navigates to a URL |
+| `browser_evaluate` | Executes JavaScript on the page and returns the result |
+| `browser_snapshot` | Captures the accessibility tree of the page |
+| `browser_take_screenshot` | Captures a screenshot of the viewport |
+| `browser_click` | Clicks an element |
+| `browser_type` | Types text into a field |
+| `browser_fill_form` | Fills out forms |
+| `browser_select_option` | Selects an option in a `<select>` element |
+| `browser_hover` | Hovers over an element |
+| `browser_press_key` | Presses a keyboard key |
+| `browser_wait_for` | Waits for a selector or condition |
+| `browser_network_requests` | Lists the network requests made by the page |
+| `browser_console_messages` | Returns the browser console logs |
+| `browser_tabs` | Lists open tabs |
+| `browser_close` | Closes the browser |
 
 ---
 
-## Solução de problemas
+## Troubleshooting
 
-**`node` não é reconhecido após a instalação**
-Feche e reabra o terminal. Se persistir, adicione manualmente ao PATH:
+**`node` is not recognized after installation**
+Close and reopen the terminal. If it persists, add it to PATH manually:
 ```powershell
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\nodejs", "User")
 ```
 
-**O MCP não aparece no `/mcp`**
-Confirme que o `.mcp.json` está na raiz da pasta onde o Claude Code foi iniciado.
+**The MCP does not appear in `/mcp`**
+Make sure `.mcp.json` is in the root of the folder where Claude Code was started.
 
-**Erro ao executar `npx @playwright/mcp@latest`**
-Execute o comando manualmente no terminal para ver o erro completo:
+**Error running `npx @playwright/mcp@latest`**
+Run the command manually in the terminal to see the full error:
 ```powershell
 npx @playwright/mcp@latest
 ```
-Se falhar por falta de browsers, instale-os:
+If it fails due to missing browsers, install them:
 ```powershell
 npx playwright install
 ```
 
 ---
 
-## Referências
+## References
 
-- [Playwright MCP — repositório oficial](https://github.com/microsoft/playwright-mcp)
+- [Playwright MCP — official repository](https://github.com/microsoft/playwright-mcp)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Claude Code — documentação](https://docs.claude.com/en/docs/claude-code/overview)
+- [Claude Code — documentation](https://docs.claude.com/en/docs/claude-code/overview)

@@ -1,14 +1,14 @@
-# CLAUDExperience — Projetos
+# CLAUDExperience — Projects
 
-Experimentos práticos com **Claude Code**.
+Practical experiments with **Claude Code**.
 
 ---
 
-| Projeto | Descrição |
+| Project | Description |
 |---|---|
-| [Word Frequency](word-frequency/README.md) | Análise de frequência de palavras em texto ou URL |
-| [MCP Playwright](mcp-playright/README.md) | Scraping via MCP Playwright — coleta de 50 livros com geração de HTML |
+| [Word Frequency](word-frequency/README.md) | Word frequency analysis from text or URL |
+| [MCP Playwright](mcp-playright/README.md) | Web scraping via MCP Playwright — collecting 50 books and generating an HTML report |
 
 ---
 
-> O [README.md](README.md) na raiz é um guia de referência do Claude Code.
+> The [README.md](README.md) at the root is a Claude Code quick reference guide.
