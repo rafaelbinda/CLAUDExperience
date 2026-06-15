@@ -4,6 +4,16 @@ Passo a passo para instalar e configurar o **MCP Playwright** no Claude Code, pe
 
 ---
 
+## O que foi construído neste projeto
+
+Como prova de conceito do MCP Playwright, o Claude navegou autonomamente pelo site [books.toscrape.com](https://books.toscrape.com/) — um sandbox público para praticar web scraping — e coletou dados de **50 livros** distribuídos em 3 páginas.
+
+Para cada livro foram extraídos: título, preço, disponibilidade, avaliação em estrelas e link direto para a página do produto. Com esses dados, o Claude gerou o arquivo [`index.html`](index.html): uma tabela com tema escuro, links clicáveis e estrelas de avaliação renderizadas em HTML.
+
+Todo o processo — navegação, extração de dados e geração do HTML — foi conduzido via linguagem natural, sem nenhum script escrito manualmente.
+
+---
+
 ## O que é MCP Playwright?
 
 **MCP** (Model Context Protocol) é um protocolo que permite ao Claude interagir com ferramentas externas em tempo real. O **MCP Playwright** expõe as capacidades do [Playwright](https://playwright.dev/) como ferramentas chamáveis pelo Claude, sem que você precise escrever scripts manualmente.
